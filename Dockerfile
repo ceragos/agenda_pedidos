@@ -14,6 +14,6 @@ ADD requirements.txt /code/
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 ADD . /code/
-RUN touch /code/logs/debug.log
+RUN touch /code/agenda_pedidos/logs/debug.log
 
 CMD ['python', 'python manage.py collectstatic && manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000 && python manage.py test && pip freeze && pip install -r requirements.txt && python manage.py registros_base && python manage.py ubicar_conductores']
