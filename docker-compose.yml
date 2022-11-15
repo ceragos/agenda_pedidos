@@ -1,0 +1,99 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    networks:
+      red_interna:
+        ipv4_address: 192.168.20.30
+  web:
+    build: .
+    command:
+      - /bin/bash
+      - -c
+      - |
+        python3 manage.py collectstatic --noinput
+        python3 manage.py migrate
+        python3 manage.py registros_base
+        python3 manage.py ubicar_conductores
+        python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_NAME=postgres
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - SECRET_KEY=i7%*3r9z-+_mz4r-!edr3r2bq1z7#3hh^qrx7(^_)*_&n@0u5u
+    depends_on:
+      - db
+      - redis
+    networks:
+      red_web:
+        ipv4_address: 192.168.10.10
+      red_interna:
+        ipv4_address: 192.168.20.10
+    hostname: servidor_web
+  redis:
+    image: redis:alpine
+    networks:
+      red_interna:
+        ipv4_address: 192.168.20.40
+  celery:
+    build: .
+    command: celery -A agenda_pedidos worker -l info
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=i7%*3r9z-+_mz4r-!edr3r2bq1z7#3hh^qrx7(^_)*_&n@0u5u
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+      - db
+    networks:
+      red_interna:
+        ipv4_address: 192.168.20.50
+  celery-beat:
+    build: .
+    command: celery -A agenda_pedidos beat -l info
+    volumes:
+      - .:/code
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=i7%*3r9z-+_mz4r-!edr3r2bq1z7#3hh^qrx7(^_)*_&n@0u5u
+      - DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+    depends_on:
+      - redis
+      - db
+    networks:
+      red_interna:
+        ipv4_address: 192.168.20.60
+  crontab:
+    build:
+      context: .
+      dockerfile: ./crontab/Dockerfile
+    init: true
+    environment:
+      - CUSTOM_ENV_VAR=foobar
+    volumes:
+      - ./crontab/root:/var/spool/cron/crontabs/root
+    networks:
+      red_interna:
+        ipv4_address: 192.168.20.20
+    hostname: servidor_crontab
+networks:
+    red_web:
+        ipam:
+            config:
+              - subnet: 192.168.10.0/24
+    red_interna:
+        ipam:
+            config:
+              - subnet: 192.168.20.0/24
