@@ -16,6 +16,10 @@ Para ejecutar las pruebas unitarias se deben detener los contenedores para evita
     docker-compose stop
     docker-compose run web sh -c "python manage.py test"
 
+# Datos de acceso
+Usuario: admin
+Contraseña: prueba-7
+
 # Nota
 
 Para acceder al SO del contenedor de la aplicación.

@@ -21,13 +21,10 @@ class Command(BaseCommand):
 
         ClienteFactory().registros_base()
 
-        usuario = User(
-            username='ceragos',
+        User.objects.create_superuser(
+            username='admin',
             email=fake.custom_email(),
             first_name=fake.name(),
             last_name=fake.last_name(),
-            is_staff=True,
-            is_superuser=True
+            password='prueba-7'
         )
-        usuario.set_password('seforabu-7')
-        usuario.save()
