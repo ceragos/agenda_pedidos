@@ -82,8 +82,8 @@ services:
         ipv4_address: 192.168.20.60
   crontab:
     build:
-      context: .
-      dockerfile: ./crontab/Dockerfile
+      context: ./crontab
+      dockerfile: Dockerfile
     container_name: crontab-agenda-pedidos
     init: true
     environment:
