@@ -1,14 +1,20 @@
-FROM centos:centos7
+FROM alpine
 
-RUN yum install -y cronie curl && \
-    rm -rf /etc/cron.*/*
+RUN which crond && \
+    rm -rf /etc/periodic
+
+RUN apk add curl
 
 RUN mkdir /code
 WORKDIR /code
 
 COPY . .
 
-ENTRYPOINT ["/entrypoint.sh"]
-# https://www.unix.com/man-page/centos/8/cron/
-# -n| Tells  the  daemon  to run in the foreground.  This can be useful when starting it out of init. With this option is needed to change pam setting.  /etc/pam.d/crond must not enable pam_loginuid.so module.
-CMD ["crond", "-n"]
+RUN chmod 777 /code/entrypoint.sh
+
+ENTRYPOINT ["/code/entrypoint.sh"]
+
+# source: `docker run --rm -it alpine  crond -h`
+# -f | Foreground
+# -l N | Set log level. Most verbose 0, default 8
+CMD ["crond", "-f", "-l", "2"]

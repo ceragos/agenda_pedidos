@@ -1,8 +1,8 @@
 # Agenda de pedidos
 
 # Requerimientos
+Sistema operativo linux
 Docker
-
 Docker-compose
 
 # Instrucciones
