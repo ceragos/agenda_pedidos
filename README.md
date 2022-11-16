@@ -8,7 +8,7 @@ Docker-compose
 # Instrucciones
 
 ###
-    docker-compose build
+    docker-compose build --no-cache
     docker-compose up -d
 
 Para ejecutar las pruebas unitarias se deben detener los contenedores para evitar conflictos de red.

@@ -1,2 +1,2 @@
-*/1 * * * * /bin/sh /code/ubicar_conductores.sh
-*/1 * * * * /bin/sh /code/prueba.sh
+*/1 * * * * /code/ubicar_conductores.sh
+*/1 * * * * /code/prueba.sh
