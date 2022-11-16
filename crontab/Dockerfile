@@ -8,7 +8,7 @@ RUN apk add curl
 RUN mkdir /code
 WORKDIR /code
 
-ADD . .
+COPY . .
 
 RUN chmod 777 /code/crontab/entrypoint.sh
 
