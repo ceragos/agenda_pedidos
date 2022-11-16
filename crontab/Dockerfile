@@ -8,9 +8,11 @@ RUN apk add curl
 RUN mkdir /code
 WORKDIR /code
 
-ADD ./crontab/ /code/
+ADD . .
 
-ENTRYPOINT ["/code/entrypoint.sh"]
+RUN chmod 777 /code/crontab/entrypoint.sh
+
+ENTRYPOINT ["/code/crontab/entrypoint.sh"]
 
 # source: `docker run --rm -it alpine  crond -h`
 # -f | Foreground
