@@ -2,6 +2,7 @@ version: '3'
 
 services:
   db:
+    container_name: db-agenda-pedidos
     image: postgres
     environment:
       - POSTGRES_DB=postgres
@@ -12,6 +13,7 @@ services:
         ipv4_address: 192.168.20.30
   web:
     build: .
+    container_name: web-agenda-pedidos
     command:
       - /bin/bash
       - -c
@@ -41,12 +43,14 @@ services:
         ipv4_address: 192.168.20.10
     hostname: servidor_web
   redis:
+    container_name: redis-agenda-pedidos
     image: redis:alpine
     networks:
       red_interna:
         ipv4_address: 192.168.20.40
   celery:
     build: .
+    container_name: celery-agenda-pedidos
     command: celery -A agenda_pedidos worker -l info
     volumes:
       - .:/code
@@ -62,6 +66,7 @@ services:
         ipv4_address: 192.168.20.50
   celery-beat:
     build: .
+    container_name: celery-beat-agenda-pedidos
     command: celery -A agenda_pedidos beat -l info
     volumes:
       - .:/code
@@ -79,6 +84,7 @@ services:
     build:
       context: .
       dockerfile: ./crontab/Dockerfile
+    container_name: crontab-agenda-pedidos
     init: true
     environment:
       - CUSTOM_ENV_VAR=foobar
